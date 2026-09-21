@@ -1,5 +1,14 @@
 <?php
 
+spl_autoload_register(function ($class) {
+    if (strpos($class, 'Dotenv\\') === 0) {
+        $file = __DIR__ . '/../vendor/vlucas/phpdotenv/src/' . str_replace('\\', '/', substr($class, 7)) . '.php';
+        if (file_exists($file)) {
+            require_once $file;
+        }
+    }
+});
+
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 
