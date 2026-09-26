@@ -12,16 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('LIVROS', function (Blueprint $table) {
-            // Chave Primária Auto-Incremento
             $table->id('LVRCODIGO');
 
-            //título: VARCHAR(150), NOT NULL e com Índice para busca rápida
+            //título: VARCHAR(150), NOT NULL e com índice para busca rápida
             $table->string('LVRTITULO', 150)->index();
 
-            //isbn: VARCHAR(15), Nulo permitido, Único quando preenchido
+            //isbn: VARCHAR(15), nulo permitido, único quando preenchido
             $table->string('LVRISBN', 15)->nullable()->unique();
 
-            //edição: Inteiro, Nulo permitido
+            //edição: inteiro, Nulo permitido
             $table->integer('LVREDICAO')->nullable();
 
             //data de publicação: DATE, Nulo permitido
@@ -30,9 +29,8 @@ return new class extends Migration
             //sinopse: TEXT, Nulo permitido
             $table->text('LVRSINOPSE')->nullable();
 
-            //idade Mínima: Inteiro, Nulo permitido
+            //idade mínima: inteiro, nulo permitido
             $table->integer('LVRFAIXAETARIA')->nullable();
-
             $table->timestamps();
         });
     }
