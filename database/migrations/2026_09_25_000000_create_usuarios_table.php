@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('USRLOGIN', 20)->unique();
 
             //USRSENHA: C(255) ajustado para hashes do laravel
-            $table->string('USRSENHA', 255);
+            $table->string('USRSENHA', 50);
 
             //FK USRNIVEL -> NIVEIS(NVLCODIGO)
 	          $table->foreignId('USRNIVEL')
