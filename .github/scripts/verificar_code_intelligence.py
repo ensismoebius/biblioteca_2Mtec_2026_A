@@ -122,12 +122,19 @@ def main():
         v for v in payload.get("regressions", []) if not excluido(v["file"], padroes)
     ]
 
-    print(json.dumps(payload, indent=2, ensure_ascii=False))
+    regressoes = payload.get("regressions", [])
     corpo = formatar(payload)
     with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
         f.write(corpo + "\n")
     comentar(corpo)
-    sys.exit(2 if payload.get("regressions") else 0)
+    if regressoes:
+        print(f"CODE INTELLIGENCE — REPROVADO ({len(regressoes)} violação(ões) nova(s))")
+        for v in regressoes:
+            print(f"  [{v['severity']}] {v['code']} em {v['file']}:{v['line']} — {v['message']}")
+        print("\nVeja o Summary desta execução (aba 'Summary' do job) para o veredito completo e como corrigir.")
+    else:
+        print("CODE INTELLIGENCE — APROVADO (nenhuma violação nova)")
+    sys.exit(2 if regressoes else 0)
 
 
 if __name__ == "__main__":

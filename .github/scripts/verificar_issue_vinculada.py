@@ -18,9 +18,21 @@ MARCADOR = "<!-- issue-link-bot -->"
 PALAVRAS = r"(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?)"
 PADRAO = re.compile(rf"\b{PALAVRAS}\s*:?\s*#(\d+)", re.IGNORECASE)
 
+# Palavras comuns que citam uma issue mas NÃO a fecham automaticamente —
+# usadas só para dar uma dica específica de "quase acertou" no erro,
+# apontando exatamente o que trocar (ex.: "Refs #77" -> "Closes #77").
+PALAVRAS_PROXIMAS = r"(?:refs?|see|relacionad[ao]s?|relates?|ref\.?|veja)"
+PADRAO_PROXIMO = re.compile(rf"\b{PALAVRAS_PROXIMAS}\s*:?\s*#(\d+)", re.IGNORECASE)
+
 
 def extrair_referencias(corpo: str) -> list[int]:
     return sorted({int(n) for n in PADRAO.findall(corpo or "")})
+
+
+def extrair_referencias_proximas(corpo: str) -> list[tuple[str, int]]:
+    """Encontra citações como 'Refs #77' que quase acertaram, para apontar
+    especificamente no erro qual palavra trocar."""
+    return [(m.group(0).strip(), int(m.group(1))) for m in PADRAO_PROXIMO.finditer(corpo or "")]
 
 
 def issue_existe(repo: str, numero: int) -> bool:
@@ -104,6 +116,14 @@ def main() -> None:
         "(em português ou inglês, `Closes`/`Fecha` não importa — use exatamente "
         "uma destas palavras: close/closes/closed, fix/fixes/fixed, resolve/resolves/resolved).",
     ]
+    proximas = extrair_referencias_proximas(corpo_pr)
+    if proximas:
+        sugestoes = ", ".join(f"`{texto}` → troque para `Closes #{numero}`" for texto, numero in proximas)
+        linhas_erro.append(
+            f"\n💡 Encontramos isto na descrição: {sugestoes}. "
+            "Essas palavras citam a issue mas não fecham ela automaticamente — troque pela "
+            "palavra-chave certa (Closes/Fixes/Resolves) se for esse o objetivo."
+        )
     if invalidas:
         linhas_erro.append(f"\nNúmeros citados que não existem como issue: {', '.join(f'#{n}' for n in invalidas)}.")
 
