@@ -190,6 +190,29 @@ Saia do shell (`exit`) e inicie o servidor: `./run.sh` no Linux, ou
 O navegador abre automaticamente em **http://127.0.0.1:8080**. Se aparecer
 a tela do Laravel/Breeze, está tudo funcionando.
 
+### 8. Rode o Pint antes de abrir o PR
+
+O projeto usa o [Laravel Pint](https://laravel.com/docs/pint) para estilo
+de código, e o CI reprova o PR se houver qualquer problema (veja "Regras
+do projeto" abaixo). Rode sempre dentro do `./shell.sh`/`shell.bat`, na
+pasta `app/`:
+
+```bash
+./vendor/bin/pint
+```
+
+Sem argumentos, o Pint **corrige automaticamente** os problemas que
+encontrar — revise o que ele mudou, adicione ao commit e dê push. Se você
+só quer conferir sem alterar nada (é o que o CI roda), use:
+
+```bash
+./vendor/bin/pint --test
+```
+
+Migrations (`database/migrations/**`) são ignoradas pelo Pint (configurado
+em `pint.json`, na raiz do repositório) — só o restante do código
+(models, controllers, requests, etc.) é verificado.
+
 ### IDE
 
 Sempre abra a pasta `app/` no seu editor (VSCode, PHPStorm, etc.) — **não**

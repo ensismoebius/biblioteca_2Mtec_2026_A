@@ -121,6 +121,8 @@ def main():
             f.write(corpo + "\n")
         with open("/tmp/comentario.md", "w") as f:
             f.write(corpo)
+        with open("/tmp/pr_number.txt", "w") as f:
+            f.write(os.environ["PR_NUMBER"])
         sys.exit(1)
 
     print("POLÍTICA DE PULL REQUESTS — APROVADO")
@@ -133,6 +135,8 @@ def main():
         f.write(corpo + "\n")
     with open("/tmp/comentario.md", "w") as f:
         f.write(corpo)
+    with open("/tmp/pr_number.txt", "w") as f:
+        f.write(os.environ["PR_NUMBER"])
 
 
 if __name__ == "__main__":
