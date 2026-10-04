@@ -1,0 +1,22 @@
+﻿{
+    "php.validate.enable": false,
+    "php.suggest.basic": false,
+    "intelephense.environment.phpVersion": "8.4.0",
+    "intelephense.files.maxSize": 5000000,
+    "[php]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "bmewburn.vscode-intelephense-client"
+    },
+    "[blade]": { "editor.formatOnSave": false },
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+    "files.associations": { "*.blade.php": "blade" },
+    "emmet.includeLanguages": { "blade": "html" },
+    "sqltools.connections": [
+        {
+            "name": "Laravel SQLite",
+            "driver": "SQLite",
+            "database": "${workspaceFolder}/../database/database.sqlite"
+        }
+    ]
+}

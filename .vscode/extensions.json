@@ -1,0 +1,17 @@
+﻿{
+    "recommendations": [
+        "bmewburn.vscode-intelephense-client",
+        "xdebug.php-debug",
+        "onecentlin.laravel5-snippets",
+        "ryannaddy.laravel-artisan",
+        "amirmarmul.laravel-blade-vscode",
+        "mikestead.dotenv",
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint",
+        "editorconfig.editorconfig",
+        "alexcvzz.vscode-sqlite",
+        "mtxr.sqltools",
+        "mtxr.sqltools-driver-sqlite",
+        "bradlc.vscode-tailwindcss"
+    ]
+}
