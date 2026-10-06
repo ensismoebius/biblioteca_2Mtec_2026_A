@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  *
  * Um livro pode ter vários gêneros e autores (relações N:N) e vários
  * exemplares físicos (relação 1:N).
- *
  */
 class Livro extends Model
 {
@@ -42,7 +41,6 @@ class Livro extends Model
      * Gêneros do livro (N:N via CLASSIFICACAO).
      *
      * O campo pivot CLSPRINCIPAL indica se o gênero é o principal.
-     *
      */
     public function generos(): BelongsToMany
     {
@@ -58,7 +56,6 @@ class Livro extends Model
      * Autores do livro (N:N via AUTORIA).
      *
      * O campo pivot ATRPRINCIPAL indica se o autor é o principal.
-     *
      */
     public function autores(): BelongsToMany
     {
@@ -72,7 +69,6 @@ class Livro extends Model
 
     /**
      * Exemplares físicos deste livro (1:N).
-     *
      */
     public function exemplares(): HasMany
     {
