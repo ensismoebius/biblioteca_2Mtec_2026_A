@@ -9,6 +9,13 @@ return new class extends Migration
 
     public function up(): void
     {
+        Schema::create('NIVEIS', function (Blueprint $table) {
+            $table->id('NVLCODIGO');
+            $table->string('NVLNOME', 50);
+            $table->timestamps();
+        });
+
+
         Schema::create('USUARIOS', function (Blueprint $table) {
             //PK auto-incremento
             $table->id('USRCODIGO');
@@ -44,6 +51,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('USUARIOS');
+        Schema::dropIfExists('NIVEIS');
     }
 };
 

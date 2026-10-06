@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Nivel extends Model
 {
     //
-    protected $table = 'niveis';
+    protected $table = 'NIVEIS';
     protected $fillable = ['NVLNOME'];
-    public $timestamps = false;
+    protected $primaryKey = 'NVLCODIGO'; 
+    public $timestamps = true;
 }
