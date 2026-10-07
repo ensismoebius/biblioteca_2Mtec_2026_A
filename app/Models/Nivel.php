@@ -8,7 +8,10 @@ class Nivel extends Model
 {
     //
     protected $table = 'NIVEIS';
+
     protected $fillable = ['NVLNOME'];
-    protected $primaryKey = 'NVLCODIGO'; 
+
+    protected $primaryKey = 'NVLCODIGO';
+
     public $timestamps = true;
 }

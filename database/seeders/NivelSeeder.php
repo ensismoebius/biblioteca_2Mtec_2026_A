@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Nivel;
 use Illuminate\Database\Seeder;
 
 class NivelSeeder extends Seeder
@@ -16,7 +16,7 @@ class NivelSeeder extends Seeder
         $niveis = ['Administrador', 'Bibliotecário', 'Atendente'];
 
         foreach ($niveis as $nivel) {
-            \App\Models\Nivel::firstOrCreate(['NVLNOME' => $nivel]);
+            Nivel::firstOrCreate(['NVLNOME' => $nivel]);
         }
     }
 }
