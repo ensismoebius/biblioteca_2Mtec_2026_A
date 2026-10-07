@@ -5,6 +5,10 @@ namespace Database\Seeders;
 use App\Models\Genero;
 use Illuminate\Database\Seeder;
 
+/**
+ * lista de 12 generos para o banco de dados
+ */
+
 class GeneroSeeder extends Seeder
 {
     /**

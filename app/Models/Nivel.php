@@ -4,6 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * tabela que guarda os cargos dos usuarios
+ */
+
 class Nivel extends Model
 {
     //
