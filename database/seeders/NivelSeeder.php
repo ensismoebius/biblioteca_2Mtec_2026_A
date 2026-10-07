@@ -8,7 +8,6 @@ use Illuminate\Database\Seeder;
 /**
  * lista de 3 niveis de acesso para o banco de dados
  */
-
 class NivelSeeder extends Seeder
 {
     /**
