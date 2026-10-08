@@ -96,4 +96,33 @@ class ProfileTest extends TestCase
 
         $this->assertNotNull($user->fresh());
     }
+
+    /** Git Olhou pra mim e disse q tem q fazer a documentação: Essa função garante que um visitante não consiga acessar diretamente a página de perfil. */
+    public function test_guest_cannot_access_profile_page_directly(): void
+    {
+        $response = $this->get('/profile');
+
+        $response->assertRedirect(route('login'));
+    }
+
+    /** Git Olhou pra mim e disse q tem q fazer a documentação2: Essa função garante que um visitante não consiga atualizar o perfil diretamente. */
+    public function test_guest_cannot_update_profile_directly(): void
+    {
+        $response = $this->patch('/profile', [
+            'name' => 'Unauthorized User',
+            'email' => 'unauthorized@example.com',
+        ]);
+
+        $response->assertRedirect(route('login'));
+    }
+
+    /** Git Olhou pra mim e disse q tem q fazer a documentação3: Essa função garante que um visitante não consiga excluir a própria conta diretamente. */
+    public function test_guest_cannot_delete_account_directly(): void
+    {
+        $response = $this->delete('/profile', [
+            'password' => 'password',
+        ]);
+
+        $response->assertRedirect(route('login'));
+    }
 }

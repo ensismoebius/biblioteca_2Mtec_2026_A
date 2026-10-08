@@ -34,7 +34,7 @@ idênticas — cada turma entrega sua própria implementação.
 
 ## Stack técnica
 
-- **Laravel 12** + PHP 8.3
+- **Laravel 12** + PHP 8.4
 - **Blade** + **Tailwind CSS** (via Laravel Breeze)
 - **MySQL 8**
 - **Vite** para build de assets front-end
@@ -92,33 +92,21 @@ Expand-Archive pl.zip -DestinationPath .
 cd portable-laravel-windows
 ```
 
-### 3. Ajuste os scripts do Portaravel para usar MySQL
+### 3. Ajuste necessário no Windows (SQLite → MySQL)
 
-Por padrão, o Portaravel roda com um banco SQLite embutido: os scripts
-`_env.sh`/`_env.bat` sobrescrevem `DB_CONNECTION`/`DB_DATABASE` como
-variáveis de ambiente, o que ignora silenciosamente o que você configurar
-no `.env` (Laravel dá prioridade à variável de ambiente). Como este
-projeto usa **MySQL** (ver "Stack técnica"), é preciso corrigir isso uma
-única vez, editando 4 arquivos para forçar `mysql` logo depois que eles
-carregam o `_env.sh`/`_env.bat`.
+No **Linux**, a distribuição do Portaravel já respeita o `DB_CONNECTION` que
+estiver definido no `.env` do projeto — como o `.env.example` deste
+repositório já vem configurado para `mysql` (você vai copiá-lo no passo 5),
+nenhum ajuste extra é necessário. Pule para o passo 4.
 
-**Linux** — em `shell.sh`, `run.sh`, `artisan.sh` e `composer.sh`,
-adicione estas duas linhas logo após a linha `source "$DIST_ROOT/_env.sh"`:
-```bash
-export DB_CONNECTION=mysql
-export DB_DATABASE=biblioteca
-```
+No **Windows**, a distribuição ainda sobrescreve `DB_CONNECTION`/
+`DB_DATABASE` como variáveis de ambiente antes de ler o `.env` (o que
+ignora silenciosamente o que você configurar lá — Laravel dá prioridade à
+variável de ambiente). É preciso corrigir isso uma única vez, editando 4
+arquivos para forçar `mysql` logo depois que eles carregam o `_env.bat`.
 
-Ou rode este comando (uma vez, na pasta do Portaravel) para aplicar nos
-quatro arquivos de uma vez:
-```bash
-for f in shell.sh run.sh artisan.sh composer.sh; do
-  sed -i '/source.*_env\.sh/a export DB_CONNECTION=mysql\nexport DB_DATABASE=biblioteca' "$f"
-done
-```
-
-**Windows** — em `shell.bat`, `run.bat`, `artisan.bat` e `composer.bat`,
-adicione estas duas linhas logo após a linha `call "%DIST_ROOT%\_env.bat"`:
+Em `shell.bat`, `run.bat`, `artisan.bat` e `composer.bat`, adicione estas
+duas linhas logo após a linha `call "%DIST_ROOT%\_env.bat"`:
 ```bat
 set "DB_CONNECTION=mysql"
 set "DB_DATABASE=biblioteca"
@@ -136,10 +124,10 @@ rm -rf app
 mv ../biblioteca_2Mtec_2026_A app
 ```
 
-**Windows (CMD):**
-```cmd
-rmdir /s /q app
-move ..\biblioteca_2Mtec_2026_A app
+**Windows (PowerShell):**
+```powershell
+Remove-Item -Recurse -Force app
+Move-Item ..\biblioteca_2Mtec_2026_A app
 ```
 
 ### 5. Instale as dependências e configure o `.env`
@@ -245,20 +233,28 @@ integrantes do time** (não conta a própria pessoa que abriu o PR).
 ### 2. Política de tamanho de Pull Request (`verificar-politica-pr`)
 Um bot analisa automaticamente o diff do PR e reprova quando:
 - **Um arquivo já existente é reescrito quase por inteiro** (90% ou mais das
-  suas linhas alteradas). Prefira mudanças pequenas e incrementais no lugar
-  de reescrever um arquivo do zero.
-- **O PR é grande** (300 linhas alteradas ou mais) **e** inclui arquivos que
-  já existiam antes do PR. PRs grandes só são aceitos quando **todos** os
-  arquivos tocados são novos (criação) — por exemplo, adicionar várias
-  telas novas de uma vez é permitido; reescrever várias telas existentes de
-  uma vez, não.
+  suas linhas alteradas) — mas só quando o arquivo já é grande o bastante
+  para isso importar: o arquivo original precisa ter pelo menos o limiar
+  "warning" de tamanho de arquivo do Code Intelligence (hoje 500 linhas,
+  configurado em `.github/code_intelligence/default_config.json`, com
+  possível override em `.code-intelligence.json`). Reescrever 90% de um
+  arquivo pequeno não é considerado um problema.
+- **Um arquivo já existente (não-novo) tem 300 linhas alteradas ou mais**
+  — o limite é **por arquivo**, não somado entre todos os arquivos do PR.
+  Ou seja, um PR pode tocar vários arquivos pequenos sem problema; o que
+  reprova é um único arquivo recebendo mudanças demais de uma vez.
 - Arquivos gerados automaticamente (`composer.lock`, `package-lock.json`,
   migrations) não entram nesse cálculo.
 
 O resultado aparece como um comentário automático no próprio PR, explicando
 exatamente o que precisa ser dividido ou ajustado.
 
-### 3. Code Intelligence — qualidade de código (`code-intelligence`)
+### 3. Proteção da esteira de CI (`verificar-politica-pr`)
+Nenhum PR pode alterar arquivos dentro de `.github/workflows/` — só o
+professor altera a esteira de CI. Um PR que tocar qualquer arquivo nessa
+pasta é automaticamente reprovado, independente do motivo da mudança.
+
+### 4. Code Intelligence — qualidade de código (`code-intelligence`)
 Um segundo bot roda uma análise estática do código PHP alterado no PR,
 comparando com a `main`, e **reprova se o PR introduzir qualquer violação
 nova** que não existia antes (tolerância zero) — por exemplo:
@@ -278,7 +274,7 @@ cada violação nova com arquivo, linha e explicação. Corrigir o problema e
 dar um novo push reavalia automaticamente — não é preciso fechar e reabrir
 o PR.
 
-### 4. Issue vinculada (`verificar-issue-vinculada`)
+### 5. Issue vinculada (`verificar-issue-vinculada`)
 Todo PR **precisa** referenciar, na descrição, a issue que ele resolve,
 usando uma das palavras-chave de fechamento automático do GitHub:
 `Closes #N`, `Fixes #N` ou `Resolves #N` (aceita variações como
@@ -301,8 +297,7 @@ campo `Closes #` pronto para preencher.
 
 ## Modelo de dados
 
-_(o diagrama ER e a documentação do schema serão adicionados aqui pelo time
-— veja as issues de Banco de Dados da Sprint 1)._
+![Diagrama ER](docs/diagrama-er.png)
 
 ## Equipe
 
@@ -318,10 +313,13 @@ Pull Request individual (veja a issue "Adicionar seu nome ao README").
 | Gabriel Ornelas de Aguilar| ornelasXXtentationXX | 10520 |
 | Arthur Comarim de Freitas Arcanjo | Arthur-Comarim | 10378 |
 | Emanuel dos Santos Batista | Linuel14 | 10382 |
-|Cesar Augusto Denelle Mussi | Meganoot2010 | 10463 |
+| Heloíse Bastos do Carmo Almeida | HeloiseBCA | 10385 |
+| Igor Vaz Cavalcanti | Igor-V-C | 10246 |
+| Cesar Augusto Denelle Mussi | Meganoot2010 | 10463 |
 | Gustavo Porfirio dos Santos | GustavoP55 | 10251 |
 | Laura Kelly OLIVEIRA ALMEIDA | koallaura | 10249 |
 | Eric Richard Silveira | ersgd21 | 10273 |
 | Esmeralda Amorim do Nascimento | amorimesme | 10386 |
 | Agatha de Paula Fernandes | thagax | 10516 |
 | Gabriel de brito simao | gabrielbritosimao-crypto| 10379|
+| Batriz Estevão Saraiva da Silva | beatrzestevao | 10243
