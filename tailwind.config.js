@@ -11,6 +11,18 @@ export default {
 
     theme: {
         extend: {
+            colors: {
+                library: {
+                    background: '#0a0a0a',
+                    surface: '#262626',
+                    'surface-hover': '#3f3f46',
+                    border: '#52525b',
+                    text: '#f5f5f4',
+                    muted: '#d4d4d8',
+                    accent: '#a5b4fc',
+                    secondary: '#191970',
+                },
+            },
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
