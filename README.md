@@ -233,20 +233,28 @@ integrantes do time** (não conta a própria pessoa que abriu o PR).
 ### 2. Política de tamanho de Pull Request (`verificar-politica-pr`)
 Um bot analisa automaticamente o diff do PR e reprova quando:
 - **Um arquivo já existente é reescrito quase por inteiro** (90% ou mais das
-  suas linhas alteradas). Prefira mudanças pequenas e incrementais no lugar
-  de reescrever um arquivo do zero.
-- **O PR é grande** (300 linhas alteradas ou mais) **e** inclui arquivos que
-  já existiam antes do PR. PRs grandes só são aceitos quando **todos** os
-  arquivos tocados são novos (criação) — por exemplo, adicionar várias
-  telas novas de uma vez é permitido; reescrever várias telas existentes de
-  uma vez, não.
+  suas linhas alteradas) — mas só quando o arquivo já é grande o bastante
+  para isso importar: o arquivo original precisa ter pelo menos o limiar
+  "warning" de tamanho de arquivo do Code Intelligence (hoje 500 linhas,
+  configurado em `.github/code_intelligence/default_config.json`, com
+  possível override em `.code-intelligence.json`). Reescrever 90% de um
+  arquivo pequeno não é considerado um problema.
+- **Um arquivo já existente (não-novo) tem 300 linhas alteradas ou mais**
+  — o limite é **por arquivo**, não somado entre todos os arquivos do PR.
+  Ou seja, um PR pode tocar vários arquivos pequenos sem problema; o que
+  reprova é um único arquivo recebendo mudanças demais de uma vez.
 - Arquivos gerados automaticamente (`composer.lock`, `package-lock.json`,
   migrations) não entram nesse cálculo.
 
 O resultado aparece como um comentário automático no próprio PR, explicando
 exatamente o que precisa ser dividido ou ajustado.
 
-### 3. Code Intelligence — qualidade de código (`code-intelligence`)
+### 3. Proteção da esteira de CI (`verificar-politica-pr`)
+Nenhum PR pode alterar arquivos dentro de `.github/workflows/` — só o
+professor altera a esteira de CI. Um PR que tocar qualquer arquivo nessa
+pasta é automaticamente reprovado, independente do motivo da mudança.
+
+### 4. Code Intelligence — qualidade de código (`code-intelligence`)
 Um segundo bot roda uma análise estática do código PHP alterado no PR,
 comparando com a `main`, e **reprova se o PR introduzir qualquer violação
 nova** que não existia antes (tolerância zero) — por exemplo:
@@ -266,7 +274,7 @@ cada violação nova com arquivo, linha e explicação. Corrigir o problema e
 dar um novo push reavalia automaticamente — não é preciso fechar e reabrir
 o PR.
 
-### 4. Issue vinculada (`verificar-issue-vinculada`)
+### 5. Issue vinculada (`verificar-issue-vinculada`)
 Todo PR **precisa** referenciar, na descrição, a issue que ele resolve,
 usando uma das palavras-chave de fechamento automático do GitHub:
 `Closes #N`, `Fixes #N` ou `Resolves #N` (aceita variações como
