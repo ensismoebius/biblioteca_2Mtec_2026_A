@@ -7,8 +7,7 @@ on:
 
 permissions:
   contents: read
-  issues: write
-  pull-requests: write
+  issues: read
 
 jobs:
   verificar-issue-vinculada:
@@ -29,3 +28,14 @@ jobs:
           PR_BODY: ${{ github.event.pull_request.body }}
           GH_TOKEN: ${{ github.token }}
         run: python3 .github/scripts/verificar_issue_vinculada.py
+
+      - name: Publicar artefato do comentário
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr-comment-issue-vinculada
+          path: |
+            /tmp/comentario.md
+            /tmp/pr_number.txt
+          retention-days: 1
+          if-no-files-found: ignore

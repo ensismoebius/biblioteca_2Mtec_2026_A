@@ -7,8 +7,6 @@ on:
 
 permissions:
   contents: read
-  issues: write
-  pull-requests: write
 
 jobs:
   code-intelligence:
@@ -37,7 +35,16 @@ jobs:
         id: verificacao
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
-          GH_TOKEN: ${{ github.token }}
         run: python3 .github/scripts/verificar_code_intelligence.py
+
+      - name: Publicar artefato do comentário
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr-comment-code-intelligence
+          path: |
+            /tmp/comentario.md
+            /tmp/pr_number.txt
+          retention-days: 1
+          if-no-files-found: ignore

@@ -7,8 +7,6 @@ on:
 
 permissions:
   contents: read
-  issues: write
-  pull-requests: write
 
 jobs:
   verificar-politica-pr:
@@ -25,41 +23,16 @@ jobs:
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
         run: python3 .github/scripts/verificar_politica_pr.py
 
-      - name: Publicar resultado no PR
+      - name: Publicar artefato do comentário
         if: always()
-        uses: actions/github-script@v7
+        uses: actions/upload-artifact@v4
         with:
-          script: |
-            const fs = require('fs');
-            const corpo = fs.readFileSync('/tmp/comentario.md', 'utf8');
-            const marcador = '<!-- pr-policy-bot -->';
-            try {
-              const { data: comentarios } = await github.rest.issues.listComments({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: context.payload.pull_request.number,
-              });
-              const existente = comentarios.find(c => c.body.includes(marcador));
-              if (existente) {
-                await github.rest.issues.updateComment({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  comment_id: existente.id,
-                  body: corpo,
-                });
-              } else {
-                await github.rest.issues.createComment({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  issue_number: context.payload.pull_request.number,
-                  body: corpo,
-                });
-              }
-            } catch (err) {
-              // PRs de fork recebem um token somente leitura — nunca deixe a
-              // falha ao comentar derrubar o job (o veredito real já foi
-              // decidido pelo passo "Rodar verificação").
-              core.warning('Não foi possível comentar no PR (provável token somente leitura de PR de fork): ' + err.message);
-            }
+          name: pr-comment-politica
+          path: |
+            /tmp/comentario.md
+            /tmp/pr_number.txt
+          retention-days: 1
+          if-no-files-found: ignore

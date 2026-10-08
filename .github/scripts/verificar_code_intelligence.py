@@ -66,36 +66,17 @@ def formatar(payload):
     )
 
 
-def comentar(corpo):
-    """Tenta publicar/atualizar o comentário no PR. Em PRs de fork o token é
-    somente leitura e isso falha com 403 — é esperado, não um erro real, e
-    nunca deve aparecer no console como se o script tivesse quebrado (por
-    isso capture_output=True em toda chamada `gh`). O veredito de verdade
-    já foi escrito no Step Summary do job antes desta função ser chamada."""
-    repo = os.environ["GITHUB_REPOSITORY"]
-    pr_number = os.environ["PR_NUMBER"]
-    lista = subprocess.run(
-        ["gh", "api", f"repos/{repo}/issues/{pr_number}/comments", "--paginate"],
-        capture_output=True, text=True,
-    )
-    comentarios = json.loads(lista.stdout or "[]") if lista.returncode == 0 else []
-    existente = next((c for c in comentarios if MARCADOR in c.get("body", "")), None)
-    payload = json.dumps({"body": corpo})
-    if existente:
-        r = subprocess.run(
-            ["gh", "api", f"repos/{repo}/issues/comments/{existente['id']}", "-X", "PATCH", "--input", "-"],
-            input=payload, text=True, capture_output=True,
-        )
-    else:
-        r = subprocess.run(
-            ["gh", "api", f"repos/{repo}/issues/{pr_number}/comments", "-X", "POST", "--input", "-"],
-            input=payload, text=True, capture_output=True,
-        )
-    if r.returncode != 0:
-        print(
-            "Nota: não foi possível comentar no PR (normal em PRs de fork, cujo token é "
-            "somente leitura). O resultado real está no Step Summary deste job, acima. ▲"
-        )
+def escrever_artefato_comentario(corpo):
+    """Grava o corpo do comentário e o número do PR em arquivos, para que o
+    workflow 'Comentar resultados dos checks no PR' (acionado via
+    workflow_run, que roda com permissão de escrita mesmo para PRs de fork)
+    os publique depois. PRs de fork recebem um GITHUB_TOKEN somente leitura
+    em workflows disparados por pull_request — por isso nunca tentamos
+    comentar diretamente aqui."""
+    with open("/tmp/comentario.md", "w", encoding="utf-8") as f:
+        f.write(corpo)
+    with open("/tmp/pr_number.txt", "w", encoding="utf-8") as f:
+        f.write(os.environ["PR_NUMBER"])
 
 
 def main():
@@ -122,12 +103,19 @@ def main():
         v for v in payload.get("regressions", []) if not excluido(v["file"], padroes)
     ]
 
-    print(json.dumps(payload, indent=2, ensure_ascii=False))
+    regressoes = payload.get("regressions", [])
     corpo = formatar(payload)
     with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
         f.write(corpo + "\n")
-    comentar(corpo)
-    sys.exit(2 if payload.get("regressions") else 0)
+    escrever_artefato_comentario(corpo)
+    if regressoes:
+        print(f"CODE INTELLIGENCE — REPROVADO ({len(regressoes)} violação(ões) nova(s))")
+        for v in regressoes:
+            print(f"  [{v['severity']}] {v['code']} em {v['file']}:{v['line']} — {v['message']}")
+        print("\nVeja o Summary desta execução (aba 'Summary' do job) para o veredito completo e como corrigir.")
+    else:
+        print("CODE INTELLIGENCE — APROVADO (nenhuma violação nova)")
+    sys.exit(2 if regressoes else 0)
 
 
 if __name__ == "__main__":

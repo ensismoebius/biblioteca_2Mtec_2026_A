@@ -1,0 +1,51 @@
+name: Comentar resultados dos checks no PR
+
+# Roda depois dos checks disparados por pull_request, não junto com eles.
+# Motivo: PRs de fork recebem um GITHUB_TOKEN somente leitura em workflows
+# disparados por `pull_request` — nunca é possível comentar diretamente
+# nesse contexto, não importa o que `permissions:` declare. Um workflow
+# acionado por `workflow_run`, por outro lado, sempre usa a versão do
+# workflow do branch padrão do repositório (nunca a de um fork) e por isso
+# recebe um token com permissão de escrita real. É o único lugar seguro do
+# pipeline para de fato publicar comentários em PRs de fork.
+on:
+  workflow_run:
+    workflows:
+      - "Estilo de Código (Pint)"
+      - "Política de Pull Requests"
+      - "Code Intelligence"
+      - "Issue Vinculada"
+    types: [completed]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+  actions: read
+
+jobs:
+  comentar:
+    if: github.event.workflow_run.conclusion != 'cancelled' && github.event.workflow_run.conclusion != 'skipped'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (apenas para ter o script)
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            .github/scripts
+          sparse-checkout-cone-mode: false
+
+      - name: Baixar artefatos do comentário
+        uses: actions/download-artifact@v4
+        with:
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ github.token }}
+          pattern: pr-comment-*
+          path: comentarios
+        continue-on-error: true
+
+      - name: Publicar/atualizar comentários no PR
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GH_TOKEN: ${{ github.token }}
+        run: python3 .github/scripts/publicar_comentarios.py comentarios
