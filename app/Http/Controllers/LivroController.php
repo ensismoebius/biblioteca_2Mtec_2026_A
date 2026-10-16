@@ -7,6 +7,9 @@ use App\Models\Genero;
 use App\Models\Livro;
 use Illuminate\Http\Request;
 
+/**
+ * Controller responsável pela gestão e operações CRUD de livros.
+ */
 class LivroController extends Controller
 {
     /**
