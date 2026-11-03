@@ -5,23 +5,32 @@ namespace App\Http\Controllers;
 use App\Models\Autor;
 use Illuminate\Http\Request;
 
+/**
+ * Controller responsável pelo gerenciamento de autores.
+ */
 class AutorController extends Controller
 {
-    
-     //exibe a listagem dos autores com paginação de 15 registros
+    /**
+     * Exibe a listagem dos autores com paginação de 15 registros.
+     */
     public function index()
     {
         $autores = Autor::paginate(15);
+
         return view('autores.index', compact('autores'));
     }
 
-     //form de criação
+    /**
+     * Exibe o formulário de criação de um novo autor.
+     */
     public function create()
     {
         return view('autores.create');
     }
-    
-     //salva o novo autor com os dados validados
+
+    /**
+     * Salva o novo autor com os dados validados.
+     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -34,19 +43,25 @@ class AutorController extends Controller
             ->with('success', 'Autor cadastrado com sucesso!');
     }
 
-     //exibe um autor específico
+    /**
+     * Exibe um autor específico.
+     */
     public function show(Autor $autore)
     {
         return view('autores.show', ['autor' => $autore]);
     }
 
-     //form de edição
+    /**
+     * Exibe o formulário de edição de um autor.
+     */
     public function edit(Autor $autore)
     {
         return view('autores.edit', ['autor' => $autore]);
     }
 
-     //atualiza o autor específico salvando os dados validados
+    /**
+     * Atualiza o autor específico salvando os dados validados.
+     */
     public function update(Request $request, Autor $autore)
     {
         $validated = $request->validate([
@@ -59,7 +74,9 @@ class AutorController extends Controller
             ->with('success', 'Autor atualizado com sucesso!');
     }
 
-     //remove o autor e retorna com mensagem flash de confirmação
+    /**
+     * Remove o autor e retorna com mensagem flash de confirmação.
+     */
     public function destroy(Autor $autore)
     {
         $autore->delete();
