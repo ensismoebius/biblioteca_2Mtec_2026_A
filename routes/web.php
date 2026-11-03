@@ -18,8 +18,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     /**
-    * rota resource de rutores(Issue #35)
-    */
+     * rota resource de rutores(Issue #35)
+     */
     Route::resource('autores', AutorController::class);
 });
 
