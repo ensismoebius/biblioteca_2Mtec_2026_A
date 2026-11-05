@@ -121,8 +121,8 @@ class Livro extends Model
     public function scopeGenero($query, $generoId)
     {
         if ($generoId) {
-            return $query->whereHas('generos', function ($q) use ($generoId) {
-                $q->where('GENEROS.GNRCODIGO', $generoId);
+            return $query->whereHas('generos', function ($subQuery) use ($generoId) {
+                $subQuery->where('GENEROS.GNRCODIGO', $generoId);
             });
         }
 
@@ -134,8 +134,8 @@ class Livro extends Model
      */
     public function scopeDisponivel($query)
     {
-        return $query->whereHas('exemplares', function ($q) {
-            $q->where('EXMDISPONIVEL', true);
+        return $query->whereHas('exemplares', function ($subQuery) {
+            $subQuery->where('EXMDISPONIVEL', true);
         });
     }
 }
