@@ -8,7 +8,6 @@
 </head>
 <body class="bg-gray-100 text-gray-900 p-8">
     <div class="max-w-6xl mx-auto bg-white shadow-md rounded-lg p-6">
-
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-3xl font-bold text-indigo-600">Lista de Livros</h1>
         </div>
@@ -45,7 +44,6 @@
                 </tbody>
             </table>
         </div>
-
     </div>
 </body>
 </html>

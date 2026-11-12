@@ -11,8 +11,7 @@
         <h1 class="text-3xl font-bold text-indigo-600 mb-4">{{ $livro->LVRTITULO }}</h1>
         <p class="text-gray-700 mb-2"><strong>Editora:</strong> {{ $livro->LVREDITORA ?? 'N/A' }}</p>
         <p class="text-gray-700 mb-4"><strong>Exemplares Disponíveis:</strong> {{ $exemplaresDisponiveisCount }}</p>
-
-        <a href="{{ route('livros.index') }}" class="text-indigo-600 hover:underline">&larr; Voltar para a listagem</a>
+        <a href="{{ route('livros.index') }}" class="text-indigo-600 hover:underline">← Voltar para a listagem</a>
     </div>
 </body>
 </html>
