@@ -24,13 +24,13 @@ class Emprestimo extends Model
         'EMPUSUARIO',
         'EMPCLIENTE',
         'EMPDTEMPR',
-        'EMPDTDEVOL'
+        'EMPDTDEVOL',
     ];
 
     // define o tipo de dado para as datas
     protected $casts = [
         'EMPDTEMPR' => 'date',
-        'EMPDTDEVOL' => 'date'
+        'EMPDTDEVOL' => 'date',
     ];
 
     /**

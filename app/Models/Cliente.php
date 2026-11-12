@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 
 /**
  * Representa um cliente cadastrado no sistema.
@@ -26,13 +25,13 @@ class Cliente extends Model
         'CLITELEFONE',
         'CLIEMAIL',
         'CLIDTNASC',
-        'CLIDTCAD'
+        'CLIDTCAD',
     ];
 
     // define o tipo de dado para as datas
     protected $casts = [
         'CLIDTNASC' => 'date',
-        'CLIDTCAD' => 'date'
+        'CLIDTCAD' => 'date',
     ];
 
     /**
@@ -54,7 +53,7 @@ class Cliente extends Model
     {
         if ($this->CLIDTNASC) {
             $birthDate = new \DateTime($this->CLIDTNASC);
-            $today = new \DateTime();
+            $today = new \DateTime;
 
             return $today->diff($birthDate)->y;
         }
