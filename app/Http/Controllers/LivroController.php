@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Autor;
 use App\Models\Genero;
 use App\Models\Livro;
 use Illuminate\Http\Request;
@@ -10,7 +9,7 @@ use Illuminate\View\View;
 
 /**
  * Controla as requisições referentes aos livros do acervo,
- * incluindo listagem com filtros, paginação e cadastro.
+ * incluindo listagem com filtros, paginação e detalhes.
  */
 class LivroController extends Controller
 {
@@ -37,20 +36,27 @@ class LivroController extends Controller
             $query->disponivel();
         }
 
-        $livrosList = $query->paginate(10);
+        $livrosList = $query->paginate(10)->withQueryString();
         $generos = Genero::all();
 
         return view('livros.index', compact('livrosList', 'generos'));
     }
 
     /**
-     * Exibe o formulário de cadastro de um novo livro.
+     * Exibe os detalhes de um livro específico.
      */
-    public function create(): View
+    public function show($id): View
     {
-        $autores = Autor::all();
-        $generos = Genero::all();
+        // Busca o livro pelo código legado ou retorna erro 404
+        $livro = Livro::with(['autores', 'generos', 'exemplares'])
+            ->where('LVRCODIGO', $id)
+            ->firstOrFail();
 
-        return view('livros.create', compact('autores', 'generos'));
+        // Conta quantos exemplares estão disponíveis
+        $exemplaresDisponiveisCount = $livro->exemplares()
+            ->where('EXMDISPONIVEL', true)
+            ->count();
+
+        return view('livros.show', compact('livro', 'exemplaresDisponiveisCount'));
     }
 }
