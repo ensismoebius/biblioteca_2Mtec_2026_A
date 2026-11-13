@@ -34,7 +34,7 @@ class Emprestimo extends Model
     ];
 
     /**
-     * Retorna o cliente associado ao empréstimo. 
+     * Retorna o cliente associado ao empréstimo.
      */
     public function cliente()
     {
