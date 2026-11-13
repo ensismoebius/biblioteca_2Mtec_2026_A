@@ -36,7 +36,7 @@ class Cliente extends Model
 
     /**
      * Retorna os empréstimos associados ao cliente.
-     */  
+     */
     public function emprestimos()
     {
         return $this->hasMany(
