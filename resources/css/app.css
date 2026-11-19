@@ -1,3 +1,71 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.tela-pagina {
+    @apply bg-gray-100 text-gray-900 p-8 font-sans;
+}
+
+.tabela-container {
+    @apply bg-white shadow-md rounded-lg max-w-4xl mx-auto p-6;
+}
+
+.tabela-catalogo-container {
+    @apply bg-white shadow-md rounded-lg max-w-[1100px] mx-auto p-6;
+}
+
+.titulo-pagina {
+    @apply text-2xl font-bold text-indigo-600 mb-5;
+}
+
+.form-grid-filtros {
+    @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 items-end mb-6 bg-gray-50 p-5 rounded-md border border-gray-200;
+}
+
+.form-grupo {
+    @apply flex flex-col gap-1.5;
+}
+
+.form-label {
+    @apply text-sm font-medium text-gray-700;
+}
+
+.form-input {
+    @apply p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm;
+}
+
+.checkbox-wrapper {
+    @apply flex items-center gap-2 h-[38px] text-sm text-gray-600 cursor-pointer select-none;
+}
+
+.acoes-formulario {
+    @apply flex gap-3 items-center;
+}
+
+.tabela-vazia {
+    @apply text-center text-gray-500 py-6;
+}
+
+.paginacao-container {
+    @apply flex justify-between items-center mt-5 text-sm text-gray-600;
+}
+
+.detalhe-item {
+    @apply mb-4 text-sm text-gray-600;
+}
+
+.detalhe-rotulo {
+    @apply font-semibold text-gray-800;
+}
+
+.link-padrao {
+    @apply text-indigo-600 font-semibold hover:underline;
+}
+
+.btn-primario {
+    @apply bg-indigo-600 text-white font-medium px-4 py-2 rounded hover:bg-indigo-700 transition text-sm;
+}
+
+.btn-secundario {
+    @apply bg-gray-200 text-gray-700 font-medium px-4 py-2 rounded hover:bg-gray-300 transition text-sm inline-block;
+}
