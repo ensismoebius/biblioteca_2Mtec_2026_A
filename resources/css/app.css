@@ -1,3 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.tabela-container {
+    @apply bg-white shadow-md rounded-lg max-w-4xl mx-auto p-6;
+}
+
+.tela-pagina {
+    @apply bg-gray-100 text-gray-900 p-8;
+}
+
+.titulo-pagina {
+    @apply text-3xl font-bold text-indigo-600 mb-6;
+}
+
+.link {
+    @apply text-indigo-600 font-semibold hover:underline;
+}

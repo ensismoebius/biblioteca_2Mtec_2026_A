@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\LivroController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+
+Route::resource('livros', LivroController::class);
 
 Route::get('/', function () {
     return view('welcome');
