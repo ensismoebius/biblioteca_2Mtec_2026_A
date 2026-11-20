@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreAutorRequest;
+use App\Http\Requests\UpdateAutorRequest;
 use App\Models\Autor;
-use Illuminate\Http\Request;
 
 /**
  * Controller responsável pelo gerenciamento de autores.
@@ -31,13 +32,9 @@ class AutorController extends Controller
     /**
      * Salva o novo autor com os dados validados.
      */
-    public function store(Request $request)
+    public function store(StoreAutorRequest $request)
     {
-        $validated = $request->validate([
-            'AUTNOME' => 'required|string|max:100',
-        ]);
-
-        Autor::create($validated);
+        Autor::create($request->validated());
 
         return redirect()->route('autores.index')
             ->with('success', 'Autor cadastrado com sucesso!');
@@ -62,13 +59,9 @@ class AutorController extends Controller
     /**
      * Atualiza o autor específico salvando os dados validados.
      */
-    public function update(Request $request, Autor $autore)
+    public function update(UpdateAutorRequest $request, Autor $autore)
     {
-        $validated = $request->validate([
-            'AUTNOME' => 'required|string|max:100',
-        ]);
-
-        $autore->update($validated);
+        $autore->update($request->validated());
 
         return redirect()->route('autores.index')
             ->with('success', 'Autor atualizado com sucesso!');
