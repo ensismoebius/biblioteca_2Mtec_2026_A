@@ -5,6 +5,9 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Represents a request to store an author.
+ */
 class StoreAutorRequest extends FormRequest
 {
     /**

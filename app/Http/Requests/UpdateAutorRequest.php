@@ -6,6 +6,9 @@ use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
+/**
+ * Represents a request to update an author.
+ */
 class UpdateAutorRequest extends FormRequest
 {
     /**
